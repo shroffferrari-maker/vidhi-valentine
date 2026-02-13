@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine, Vidhi ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 10;
+            max-width: 500px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in;
+        }
+        
+        .heart {
+            height: 120px;
+            width: 120px;
+            background-color: #ff4d6d;
+            transform: rotate(-45deg);
+            position: relative;
+            margin: 0 auto 30px;
+            animation: heartbeat 1.2s infinite ease-in-out;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: "";
+            height: 120px;
+            width: 120px;
+            background-color: #ff4d6d;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart::before {
+            top: -60px;
+            left: 0;
+        }
+        
+        .heart::after {
+            left: 60px;
+            top: 0;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: rotate(-45deg) scale(1); }
+            25% { transform: rotate(-45deg) scale(1.25); }
+            50% { transform: rotate(-45deg) scale(1.1); }
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            font-family: inherit;
+            font-size: 1.5em;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .yes {
+            background: linear-gradient(45deg, #ff6b9d, #ff8e8e);
+            color: white;
+        }
+        
+        .yes:hover { transform: scale(1.05); }
+        
+        .no {
+            background: linear-gradient(45deg, #a8e6cf, #88d8a3);
+            color: #333;
+            position: relative;
+        }
+        
+        .no:hover { transform: scale(1.05); }
+        
+        .response {
+            margin-top: 30px;
+            font-size: 1.8em;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            min-height: 60px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .photo-section {
+            display: none;
+            margin: 20px 0;
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .photo-section img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .sure-question {
+            font-size: 2em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 20px 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Floating hearts */
+        .particle {
+            position: absolute;
+            font-size: 20px;
+            color: #ff4d6d;
+            animation: float 6s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart"></div>
+        <h1 id="mainQuestion">Vidhi, will you be my Valentine? ❤️</h1>
+        <div class="buttons" id="mainButtons">
+            <button class="yes" onclick="handleAnswer('yes')">Yes ❤️</button>
+            <button class="no" id="noBtn" onclick="handleAnswer('no')">No</button>
+        </div>
+        <div class="response" id="response"></div>
+        
+        <!-- Photo section for "No" -->
+        <div class="photo-section" id="photoSection">
+            <img id="couplePhoto" src="" alt="Us ❤️">
+            <div class="sure-question" id="sureQuestion">Are you sure? 💔</div>
+            <div class="buttons">
+                <button class="yes" onclick="handleAnswer('yes')">Yes, I'm sure 😢</button>
+                <button class="no" id="retryNoBtn" onclick="handleAnswer('no')">No, show another photo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Your couple photos (replace with actual URLs after hosting)
+        const couplePhotos = [
+            'WhatsApp-Image-2026-02-13-at-3.08.26-PM-2.jpg', // file:11[file:11]
+            'WhatsApp-Image-2026-02-13-at-3.08.26-PM.jpg',    // file:12[file:12]
+            'WhatsApp-Image-2026-02-13-at-3.08.26-PM-3.jpg',  // file:13[file:13]
+            'WhatsApp-Image-2026-02-13-at-3.08.26-PM-1.jpg'   // file:14[file:14]
+        ];
+        
+        let currentPhotoIndex = 0;
+        
+        // Floating heart particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.innerHTML = '❤️';
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 7000);
+        }
+        
+        setInterval(createParticle, 300);
+        
+        // Move No button function
+        function moveNoButton(btnId) {
+            const btn = document.getElementById(btnId);
+            let moves = 0;
+            btn.addEventListener('mouseover', function(e) {
+                if (moves < 5) {
+                    const dx = (Math.random() - 0.5) * 100;
+                    const dy = (Math.random() - 0.5) * 100;
+                    this.style.transform = `translate(${dx}px, ${dy}px)`;
+                    moves++;
+                }
+            });
+        }
+        
+        moveNoButton('noBtn');
+        moveNoButton('retryNoBtn');
+        
+        function handleAnswer(answer) {
+            const response = document.getElementById('response');
+            const photoSection = document.getElementById('photoSection');
+            const mainButtons = document.getElementById('mainButtons');
+            const mainQuestion = document.getElementById('mainQuestion');
+            
+            if (answer === 'yes') {
+                response.innerHTML = 'Yay! I knew you would say yes! 😍 Let\'s make this Valentine\'s magical together! 💕';
+                response.style.display = 'block';
+                mainButtons.style.display = 'none';
+                photoSection.style.display = 'none';
+                mainQuestion.innerHTML = 'Happy Valentine\'s Day, my love! ❤️❤️❤️';
+            } else {
+                // Show photo and "Are you sure?"
+                mainButtons.style.display = 'none';
+                photoSection.style.display = 'block';
+                response.style.display = 'none';
+                
+                // Cycle through photos
+                document.getElementById('couplePhoto').src = couplePhotos[currentPhotoIndex];
+                currentPhotoIndex = (currentPhotoIndex + 1) % couplePhotos.length;
+            }
+        }
+    </script>
+</body>
+</html>
